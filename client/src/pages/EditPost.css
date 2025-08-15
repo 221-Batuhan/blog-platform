@@ -1,0 +1,48 @@
+.edit-post {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.edit-post-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.edit-post-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.edit-post-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.edit-post-header p {
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.edit-post-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .edit-post {
+    padding: 1rem;
+  }
+  
+  .edit-post-header h1 {
+    font-size: 2rem;
+  }
+  
+  .edit-post-form {
+    padding: 1.5rem;
+  }
+}

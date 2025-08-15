@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model for blog authors
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  username  String   @unique
+  bio       String?
+  avatar    String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  
+  @@map("users")
+}
+
+// Post model for blog posts
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  excerpt     String?
+  image       String?
+  published   Boolean  @default(false)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+  tags        PostTag[]
+  
+  @@map("posts")
+}
+
+// Tag model for categorizing posts
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String   @default("#3B82F6")
+  createdAt DateTime @default(now())
+  
+  // Relations
+  posts     PostTag[]
+  
+  @@map("tags")
+}
+
+// Junction table for Post-Tag many-to-many relationship
+model PostTag {
+  id     String @id @default(cuid())
+  postId String
+  tagId  String
+  
+  // Relations
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, tagId])
+  @@map("post_tags")
+}
+
+// Comment model for post comments
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  postId    String
+  post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@map("comments")
+}
+
+// Like model for post likes
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  // Relations
+  postId    String
+  post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@map("likes")
+}
